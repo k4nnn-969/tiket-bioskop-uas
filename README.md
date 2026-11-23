@@ -1,32 +1,33 @@
 # Tiket Bioskop UAS
 
-Demo pemesanan tiket bioskop dengan Next.js App Router, React, TypeScript, dan SQLite. UI berbahasa Indonesia dengan tema merah yang terinspirasi aplikasi pemesanan tiket.
+Demo full-stack pemesanan tiket bioskop dengan Next.js App Router, TypeScript, Tailwind CSS, dan Prisma ORM. Antarmuka mobile-first memakai palet gelap, aksen emas, dan hijau.
 
-## Menjalankan aplikasi
+## Persiapan
 
-Persyaratan: Node.js 20.19 atau lebih baru.
+1. Salin `.env.example` menjadi `.env` (untuk development lokal, URL SQLite sudah disetel).
+2. Jalankan perintah berikut:
 
 ```bash
-npm install
+npx prisma generate
+npx prisma db push
+npx prisma db seed
 npm run dev
 ```
 
-Buka [http://localhost:3000](http://localhost:3000). Database SQLite dibuat otomatis di `data/bookings.sqlite` saat endpoint pemesanan pertama kali digunakan; file database lokal tidak ikut disimpan ke Git.
+PowerShell: `Copy-Item .env.example .env`
+
+Buka [http://localhost:3000](http://localhost:3000). Database demo disimpan di `data/cinema-bookings.db`, terpisah dari file SQLite lama. Untuk PostgreSQL atau MySQL, ubah `provider` di `prisma/schema.prisma` dan sesuaikan `DATABASE_URL` di `.env`.
 
 ## Alur demo
 
-1. Pilih tanggal, jam tayang, dan 1–6 kursi.
-2. Tinjau ringkasan pesanan.
-3. Pilih QRIS, transfer bank, atau e-wallet lalu tekan tombol bayar.
-4. Pesanan dan status pembayarannya disimpan di SQLite.
+1. Pilih kursi dari denah dan data keterisian di database.
+2. Periksa ringkasan biaya tiket dan biaya admin m.tix.
+3. Pilih m.tix Balance, QRIS, atau Virtual Account, lalu bayar untuk membuat transaksi dan E-Ticket.
 
-Pemesanan kursi berlaku selama 15 menit. Kursi yang sudah dipesan atau telah dibayar tidak bisa dipesan kembali pada jadwal yang sama. Pembayaran adalah simulasi untuk tugas kuliah dan tidak memproses uang sungguhan.
+Pembayaran merupakan simulasi, bukan pemrosesan uang sungguhan. Pemesanan maksimal enam kursi. Constraint unik database pada jadwal dan nomor kursi mencegah kursi ganda sekalipun dua transaksi berjalan bersamaan.
 
-## Endpoint API
+## API
 
-- `GET /api/seats?showtime=YYYY-MM-DD%7CHH%3AMM` — kursi yang tidak tersedia pada jadwal.
-- `POST /api/orders` — membuat pesanan dan menahan kursi sementara.
-- `GET /api/orders/:id` — melihat detail dan status pesanan.
-- `PATCH /api/orders/:id` — menyelesaikan simulasi pembayaran.
-
-Harga tiket dan biaya layanan dihitung di server, bukan dipercaya dari browser. `POST /api/orders` juga memvalidasi jumlah/format kursi dan menolak kursi yang sudah diambil.
+- `GET /api/showtimes/default` atau `GET /api/showtimes/:id` — detail jadwal serta kursi yang terisi.
+- `POST /api/bookings` — validasi kursi, hitung total di server, lalu simpan booking dan kursi dalam satu transaksi.
+- `GET /api/bookings/:id` — mengambil kembali data E-Ticket.

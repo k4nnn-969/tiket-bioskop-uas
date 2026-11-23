@@ -1,14 +1,27 @@
-export type BookingOrder = {
+export type Showtime = {
   id: string;
+  movieTitle: string;
+  rating: string;
+  cinema: string;
+  studio: string;
   showDate: string;
   showTime: string;
-  seats: string[];
-  subtotal: number;
-  serviceFee: number;
-  total: number;
-  paymentMethod: string | null;
-  status: "pending" | "paid";
-  expiresAt: number;
-  createdAt: string;
-  paidAt: string | null;
+  ticketPrice: number;
+  adminFee: number;
+  occupiedSeats: string[];
 };
+
+export type ShowtimeResponse = Showtime;
+
+export type PaidBooking = {
+  id: string;
+  bookingCode: string;
+  paymentMethod: string;
+  totalAmount: number;
+  status: string;
+  createdAt: string;
+  showtime: Omit<Showtime, "occupiedSeats">;
+  seats: string[];
+};
+
+export type BookingResponse = PaidBooking | { error: string };

@@ -1,75 +1,48 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { BookingOrder } from "@/lib/booking-types";
-import { formatRupiah, formatShowDate, MovieArtwork } from "@/components/booking-header";
+import type { Showtime } from "@/lib/booking-types";
+import { formatRupiah, formatShowDate } from "@/components/booking-header";
 
-type OrderResponse = BookingOrder | { error: string };
-
-export function OrderSummary({ orderId }: { orderId: string }) {
-  const [order, setOrder] = useState<BookingOrder | null>(null);
-  const [error, setError] = useState(orderId ? "" : "ID pesanan tidak ditemukan. Silakan pilih kursi terlebih dahulu.");
-  const [loading, setLoading] = useState(Boolean(orderId));
-
-  useEffect(() => {
-    if (!orderId) return;
-    let active = true;
-    fetch(`/api/orders/${encodeURIComponent(orderId)}`)
-      .then(async (response) => {
-        const result = (await response.json()) as OrderResponse;
-        if (!response.ok || "error" in result) {
-          throw new Error("error" in result ? result.error : "Pesanan tidak dapat dimuat.");
-        }
-        if (active) setOrder(result);
-      })
-      .catch((cause: unknown) => {
-        if (active) setError(cause instanceof Error ? cause.message : "Pesanan tidak dapat dimuat.");
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
-    return () => {
-      active = false;
-    };
-  }, [orderId]);
-
-  if (loading) return <div className="surface content-card state-message">Memuat detail pesanan…</div>;
-  if (error || !order) {
-    return (
-      <div className="surface content-card">
-        <div className="state-message">{error || "Pesanan tidak ditemukan."}</div>
-        <Link href="/seat-selection" className="primary-button">Pilih kursi</Link>
-      </div>
-    );
-  }
-
+export function OrderSummary({
+  showtime, selectedSeats, error, onBack, onContinue,
+}: {
+  showtime: Showtime;
+  selectedSeats: string[];
+  error: string;
+  onBack: () => void;
+  onContinue: () => void;
+}) {
+  const subtotal = selectedSeats.length * showtime.ticketPrice;
+  const fee = selectedSeats.length * showtime.adminFee;
   return (
-    <section className="surface content-card">
-      <div className="booking-movie">
-        <MovieArtwork />
-        <div className="movie-info">
-          <h3>Senja Terakhir</h3>
-          <p>Drama · Studio 3 · Jakarta</p>
-          <p><span className={`status-pill ${order.status === "paid" ? "paid" : ""}`}>{order.status === "paid" ? "Lunas" : "Menunggu pembayaran"}</span></p>
+    <>
+      <p className="section-kicker">Langkah 2 dari 3</p>
+      <h2 className="section-title">Ringkasan pesanan</h2>
+      <p className="section-subtitle">Periksa kembali detail tiket sebelum melanjutkan ke pembayaran.</p>
+      <section className="surface ticket-card" aria-label="Ringkasan tiket">
+        <div className="ticket-top">
+          <div className="ticket-film">CINEMA XXI · E-TICKET PREVIEW</div>
+          <h3 className="ticket-title">{showtime.movieTitle}</h3>
+          <div className="ticket-cinema">{showtime.cinema} · {showtime.studio}</div>
         </div>
+        <div className="ticket-perforation" />
+        <div className="ticket-details">
+          <div><span className="detail-label">TANGGAL</span><strong className="detail-value">{formatShowDate(showtime.showDate)}</strong></div>
+          <div><span className="detail-label">JAM TAYANG</span><strong className="detail-value">{showtime.showTime} WIB</strong></div>
+          <div><span className="detail-label">STUDIO</span><strong className="detail-value">{showtime.studio}</strong></div>
+          <div><span className="detail-label">NOMOR KURSI</span><strong className="detail-value seat-values">{selectedSeats.slice().sort().join(", ")}</strong></div>
+        </div>
+        <div className="amount-list">
+          <div className="amount-line"><span>Subtotal tiket ({selectedSeats.length} × {formatRupiah(showtime.ticketPrice)})</span><strong>{formatRupiah(subtotal)}</strong></div>
+          <div className="amount-line"><span>Biaya admin m.tix ({selectedSeats.length} × {formatRupiah(showtime.adminFee)})</span><strong>{formatRupiah(fee)}</strong></div>
+          <div className="amount-line total"><span>Total bayar</span><strong>{formatRupiah(subtotal + fee)}</strong></div>
+        </div>
+      </section>
+      {error && <div className="notice" role="alert">{error}</div>}
+      <div className="button-row">
+        <button type="button" className="secondary-button" onClick={onBack}>UBAH KURSI</button>
+        <button type="button" className="primary-button" onClick={onContinue}>LANJUT PEMBAYARAN</button>
       </div>
-      <h2 style={{ marginTop: 24 }}>Detail tiket</h2>
-      <div className="data-row"><span>Tanggal</span><strong>{formatShowDate(order.showDate)}</strong></div>
-      <div className="data-row"><span>Jam tayang</span><strong>{order.showTime} WIB</strong></div>
-      <div className="data-row"><span>Kursi</span><strong>{order.seats.join(", ")}</strong></div>
-      <div className="data-row"><span>Jumlah tiket</span><strong>{order.seats.length} tiket</strong></div>
-      <div className="data-row"><span>Harga tiket</span><strong>{formatRupiah(order.subtotal)}</strong></div>
-      <div className="data-row"><span>Biaya layanan</span><strong>{formatRupiah(order.serviceFee)}</strong></div>
-      <div className="total-block"><span>Total pembayaran</span><strong>{formatRupiah(order.total)}</strong></div>
-      <div className="card-actions">
-        {order.status === "paid" ? (
-          <div className="notice" role="status">Pesanan ini sudah dibayar dengan {order.paymentMethod}.</div>
-        ) : (
-          <Link className="primary-button" href={`/payment?id=${encodeURIComponent(order.id)}`}>Pilih pembayaran</Link>
-        )}
-        <Link className="back-link" href="/seat-selection">← Kembali pilih kursi</Link>
-      </div>
-    </section>
+    </>
   );
 }

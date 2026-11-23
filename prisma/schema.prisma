@@ -1,0 +1,45 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Showtime {
+  id          String       @id @default(cuid())
+  movieTitle  String
+  rating      String
+  cinema      String
+  studio      String
+  showDate    String
+  showTime    String
+  ticketPrice Int
+  adminFee    Int          @default(4000)
+  bookings    Booking[]
+  bookedSeats BookedSeat[]
+}
+
+model Booking {
+  id            String       @id @default(cuid())
+  bookingCode   String       @unique
+  showtimeId    String
+  paymentMethod String
+  totalAmount   Int
+  status        String       @default("PAID")
+  createdAt     DateTime     @default(now())
+  showtime      Showtime     @relation(fields: [showtimeId], references: [id], onDelete: Restrict)
+  bookedSeats   BookedSeat[]
+}
+
+model BookedSeat {
+  id         String   @id @default(cuid())
+  seatNumber String
+  showtimeId String
+  bookingId  String
+  showtime   Showtime @relation(fields: [showtimeId], references: [id], onDelete: Restrict)
+  booking    Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@unique([showtimeId, seatNumber])
+}
