@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tiket Bioskop UAS
 
-## Getting Started
+Demo pemesanan tiket bioskop dengan Next.js App Router, React, TypeScript, dan SQLite. UI berbahasa Indonesia dengan tema merah yang terinspirasi aplikasi pemesanan tiket.
 
-First, run the development server:
+## Menjalankan aplikasi
+
+Persyaratan: Node.js 20.19 atau lebih baru.
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Buka [http://localhost:3000](http://localhost:3000). Database SQLite dibuat otomatis di `data/bookings.sqlite` saat endpoint pemesanan pertama kali digunakan; file database lokal tidak ikut disimpan ke Git.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Alur demo
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Pilih tanggal, jam tayang, dan 1–6 kursi.
+2. Tinjau ringkasan pesanan.
+3. Pilih QRIS, transfer bank, atau e-wallet lalu tekan tombol bayar.
+4. Pesanan dan status pembayarannya disimpan di SQLite.
 
-## Learn More
+Pemesanan kursi berlaku selama 15 menit. Kursi yang sudah dipesan atau telah dibayar tidak bisa dipesan kembali pada jadwal yang sama. Pembayaran adalah simulasi untuk tugas kuliah dan tidak memproses uang sungguhan.
 
-To learn more about Next.js, take a look at the following resources:
+## Endpoint API
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `GET /api/seats?showtime=YYYY-MM-DD%7CHH%3AMM` — kursi yang tidak tersedia pada jadwal.
+- `POST /api/orders` — membuat pesanan dan menahan kursi sementara.
+- `GET /api/orders/:id` — melihat detail dan status pesanan.
+- `PATCH /api/orders/:id` — menyelesaikan simulasi pembayaran.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Harga tiket dan biaya layanan dihitung di server, bukan dipercaya dari browser. `POST /api/orders` juga memvalidasi jumlah/format kursi dan menolak kursi yang sudah diambil.
