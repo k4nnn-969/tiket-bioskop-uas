@@ -5,6 +5,8 @@ import { BookingHeader } from "@/components/booking-header";
 import { OrderSummary } from "@/components/order-summary";
 import { PaymentSection } from "@/components/payment-section";
 import { SeatSelection } from "@/components/seat-selection";
+import { getLocalUser } from "@/lib/local-auth";
+import { rememberBooking } from "@/lib/local-bookings";
 import type { BookingResponse, PaidBooking, Showtime, ShowtimeResponse } from "@/lib/booking-types";
 
 export default function BookingPage() {
@@ -87,6 +89,7 @@ export default function BookingPage() {
     setSubmitting(true);
     setError("");
     try {
+      const bookingUser = getLocalUser();
       const response = await fetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -99,6 +102,11 @@ export default function BookingPage() {
       }
       setTicket(result);
       setStep(3);
+      try {
+        rememberBooking(result.id, bookingUser);
+      } catch {
+        setError("Pembayaran berhasil, tetapi riwayat lokal gagal disimpan. Simpan tautan atau kode tiket ini.");
+      }
       window.history.replaceState(null, "", `/booking?ticket=${encodeURIComponent(result.id)}`);
       await refreshShowtime();
     } catch (cause) {

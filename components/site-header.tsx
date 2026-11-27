@@ -64,6 +64,9 @@ export function SiteHeader() {
             <Link href="/booking" onClick={() => setMenuOpen(false)}>Bioskop &amp; Jadwal</Link>
             <Link href="/promotions" onClick={() => setMenuOpen(false)}>Promotions</Link>
             <Link href="/coming-soon" onClick={() => setMenuOpen(false)}>Coming Soon</Link>
+            <Link href="/profile" onClick={() => setMenuOpen(false)}>Profile</Link>
+            <Link href="/eticket" onClick={() => setMenuOpen(false)}>E-Ticket</Link>
+            <Link href="/history" onClick={() => setMenuOpen(false)}>History</Link>
           </nav>
           <div className={styles.actions}>
             <span className={styles.location}>
@@ -75,7 +78,7 @@ export function SiteHeader() {
             </span>
             {user ? (
               <>
-                <span className={styles.userName}>Hai, {user.name}</span>
+                <Link href="/profile" className={styles.userName}>Hai, {user.name}</Link>
                 <button className={styles.loginButton} onClick={logout} type="button">Keluar</button>
               </>
             ) : (
