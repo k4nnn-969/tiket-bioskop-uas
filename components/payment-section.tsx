@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import type { PaidBooking, Showtime } from "@/lib/booking-types";
 import { formatRupiah, formatShowDate } from "@/components/booking-header";
 
@@ -63,6 +64,8 @@ export function PaymentSection({
           <div className="amount-list"><div className="amount-line total"><span>Total dibayar</span><strong>{formatRupiah(ticket.totalAmount)}</strong></div></div>
         </section>
         <div className="button-stack"><button type="button" className="primary-button" onClick={onStartOver}>SELESAI</button></div>
+        <div className="button-stack"><Link className="secondary-button" href={`/eticket?ticket=${encodeURIComponent(ticket.id)}`}>LIHAT E-TICKET / CETAK</Link><Link className="secondary-button" href="/history">RIWAYAT PEMESANAN</Link></div>
+        {error && <p className="notice" role="alert">{error}</p>}
         <p className="footer-note">Simpan kode booking ini. Pembayaran pada demo ini disimulasikan dan tidak memproses uang sungguhan.</p>
       </div>
     );

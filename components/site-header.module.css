@@ -23,7 +23,7 @@
   .links { gap: 13px; }
 }
 
-@media (max-width: 680px) {
+@media (max-width: 1100px) {
   .nav { width: calc(100% - 32px); min-height: 64px; gap: 10px; }
   .brand { font-size: 23px; }
   .menu { display: grid; flex: 0 0 auto; place-items: center; order: 3; margin-left: auto; }

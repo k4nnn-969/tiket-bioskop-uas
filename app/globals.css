@@ -36,7 +36,7 @@ a { text-decoration: none; }
 }
 .header-inner { padding: 16px 21px 13px; }
 .brand-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 17px; }
-.booking-feature-links { display: flex; gap: 14px; margin: -7px 0 12px; }
+.booking-feature-links { display: flex; flex-wrap: wrap; gap: 14px; margin: -7px 0 12px; }
 .booking-feature-links a { color: #b9c5c3; font-size: 9px; font-weight: 700; }
 .booking-feature-links a:hover { color: var(--gold-light); }
 .brand { color: var(--gold-light); font-family: var(--font-cinzel), serif; font-size: 15px; font-weight: 700; letter-spacing: 2px; }

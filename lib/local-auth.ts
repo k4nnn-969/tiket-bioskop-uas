@@ -3,6 +3,7 @@ const SESSION_KEY = "tix_current_user";
 const PASSWORD_ITERATIONS = 120_000;
 
 type HashedLocalUser = {
+  phone?: string;
   name: string;
   email: string;
   salt: string;
@@ -10,6 +11,7 @@ type HashedLocalUser = {
 };
 
 type LegacyLocalUser = {
+  phone?: string;
   name: string;
   email: string;
   password: string;
@@ -17,7 +19,7 @@ type LegacyLocalUser = {
 
 type StoredLocalUser = HashedLocalUser | LegacyLocalUser;
 
-export type LocalUserSummary = Pick<HashedLocalUser, "name" | "email">;
+export type LocalUserSummary = Pick<HashedLocalUser, "name" | "email" | "phone">;
 
 function isStoredUser(value: unknown): value is StoredLocalUser {
   if (!value || typeof value !== "object") return false;
@@ -111,7 +113,7 @@ export async function loginLocalUser(email: string, password: string): Promise<L
     }
     const salt = toHex(window.crypto.getRandomValues(new Uint8Array(16)));
     const passwordHash = await hashPassword(password, salt);
-    const upgradedUser: HashedLocalUser = { name: user.name, email: user.email, salt, passwordHash };
+    const upgradedUser: HashedLocalUser = { name: user.name, email: user.email, phone: user.phone, salt, passwordHash };
     window.localStorage.setItem(
       USERS_KEY,
       JSON.stringify(users.map((item) => item === user ? upgradedUser : item)),
@@ -136,7 +138,22 @@ export function getLocalUser(): LocalUserSummary | null {
   if (!email) return null;
   const user = readUsers().find((item) => item.email.toLowerCase() === email.toLowerCase());
   if (!user) return null;
-  return { name: user.name, email: user.email };
+  return { name: user.name, email: user.email, phone: typeof user.phone === "string" ? user.phone : "" };
+}
+
+export function updateLocalProfile(name: string, phone: string): LocalUserSummary {
+  const current = getLocalUser();
+  if (!current) throw new Error("Silakan login terlebih dahulu.");
+  const normalizedName = name.trim();
+  const normalizedPhone = phone.trim();
+  if (normalizedName.length < 2 || normalizedName.length > 80) throw new Error("Nama harus terdiri dari 2–80 karakter.");
+  if (normalizedPhone && !/^\+?[0-9]{8,15}$/.test(normalizedPhone)) throw new Error("Nomor telepon harus berisi 8–15 angka, dengan awalan + opsional.");
+  const updated = { ...current, name: normalizedName, phone: normalizedPhone };
+  window.localStorage.setItem(USERS_KEY, JSON.stringify(readUsers().map((user) =>
+    user.email.toLowerCase() === current.email.toLowerCase() ? { ...user, name: normalizedName, phone: normalizedPhone } : user,
+  )));
+  notifyAuthChanged();
+  return updated;
 }
 
 export function logoutLocalUser() {

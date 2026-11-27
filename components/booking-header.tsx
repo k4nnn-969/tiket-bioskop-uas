@@ -16,6 +16,9 @@ export function BookingHeader({ currentStep, showtime }: { currentStep: number; 
           <Link href="/promotions">Promotions</Link>
           <Link href="/coming-soon">Coming Soon</Link>
           <Link href="/login">Login lokal</Link>
+          <Link href="/profile">Profile</Link>
+          <Link href="/eticket">E-Ticket</Link>
+          <Link href="/history">History</Link>
         </nav>
         <div className="film-heading">
           <div>
