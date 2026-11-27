@@ -1,0 +1,45 @@
+.topline { height: 5px; background: linear-gradient(90deg, #ffd454 0 20%, #1769e0 20%); }
+.header { position: sticky; z-index: 20; top: 0; border-bottom: 1px solid #e7ebf1; background: rgb(255 255 255 / 96%); backdrop-filter: blur(14px); }
+.nav { width: min(1160px, calc(100% - 48px)); min-height: 72px; display: flex; align-items: center; gap: 32px; margin: auto; }
+.brand { display: inline-flex; align-items: center; gap: 3px; flex: 0 0 auto; color: #14243b; font-size: 25px; font-weight: 800; }
+.brand span { color: #1769e0; }
+.brand i { width: 10px; height: 18px; align-self: center; margin: -5px -2px 0 -2px; background: #f4ae32; clip-path: polygon(20% 0,100% 0,72% 38%,100% 38%,26% 100%,42% 58%,0 58%); }
+.brand b { font-size: inherit; }
+.links { display: flex; align-items: center; gap: 23px; margin-right: auto; }
+.links a { color: #55647a; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.links a:hover { color: #1769e0; }
+.actions { display: flex; align-items: center; gap: 12px; }
+.location { display: flex; align-items: center; gap: 6px; color: #14243b; font-size: 10px; font-weight: 700; white-space: nowrap; }
+.location svg { width: 16px; height: 16px; fill: none; stroke: #1769e0; stroke-width: 2; }
+.loginButton { min-height: 38px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #dce3ed; border-radius: 5px; padding: 0 12px; background: #fff; color: #14243b; font-size: 10px; font-weight: 800; white-space: nowrap; }
+.loginButton:hover { border-color: #1769e0; color: #1769e0; }
+.userName { max-width: 120px; overflow: hidden; color: #526178; font-size: 10px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.menu { display: none; width: 38px; height: 38px; border: 1px solid #e7ebf1; border-radius: 5px; background: #fff; color: #14243b; }
+.menu svg { width: 19px; height: 19px; fill: none; stroke: currentColor; stroke-width: 2; }
+.authError { margin: 0; padding: 8px 16px; background: #fff0ef; color: #b52e28; font-size: 10px; text-align: center; }
+
+@media (max-width: 900px) {
+  .nav { gap: 18px; }
+  .links { gap: 13px; }
+}
+
+@media (max-width: 680px) {
+  .nav { width: calc(100% - 32px); min-height: 64px; gap: 10px; }
+  .brand { font-size: 23px; }
+  .menu { display: grid; flex: 0 0 auto; place-items: center; order: 3; margin-left: auto; }
+  .links { position: absolute; top: 63px; right: 0; left: 0; display: none; flex-direction: column; align-items: stretch; gap: 0; padding: 8px 16px 13px; border-bottom: 1px solid #e7ebf1; background: #fff; box-shadow: 0 14px 20px rgb(17 39 69 / 8%); }
+  .linksOpen { display: flex; }
+  .links a { padding: 12px 3px; border-bottom: 1px solid #f0f2f5; }
+  .links a:last-child { border-bottom: 0; }
+  .actions { gap: 7px; margin-left: auto; }
+  .location { font-size: 0; }
+  .location svg { width: 18px; height: 18px; }
+  .loginButton { min-height: 34px; padding: 0 8px; font-size: 9px; }
+  .userName { max-width: 74px; font-size: 8px; }
+}
+
+@media (max-width: 380px) {
+  .nav { gap: 7px; }
+  .actions { gap: 5px; }
+  .loginButton { padding: 0 7px; font-size: 8px; }
+}

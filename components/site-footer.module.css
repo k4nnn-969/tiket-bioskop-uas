@@ -1,0 +1,14 @@
+.footer { background: #10233f; color: #fff; }
+.inner { width: min(1160px, calc(100% - 48px)); min-height: 108px; display: flex; align-items: center; justify-content: space-between; gap: 22px; margin: auto; }
+.brand { display: inline-flex; align-items: center; gap: 3px; color: #fff; font-size: 23px; font-weight: 800; }
+.brand span { color: #fff; }
+.brand i { width: 10px; height: 18px; margin: -5px -2px 0 -2px; background: #f4ae32; clip-path: polygon(20% 0,100% 0,72% 38%,100% 38%,26% 100%,42% 58%,0 58%); }
+.brand b { font-size: inherit; }
+.caption { margin: 5px 0 0; color: rgb(255 255 255 / 62%); font-size: 9px; }
+.links { display: flex; flex-wrap: wrap; gap: 20px; color: rgb(255 255 255 / 76%); font-size: 9px; }
+.links a:hover { color: #ffd454; }
+
+@media (max-width: 600px) {
+  .inner { width: calc(100% - 32px); align-items: flex-start; flex-direction: column; justify-content: center; padding: 21px 0; }
+  .links { gap: 13px; }
+}

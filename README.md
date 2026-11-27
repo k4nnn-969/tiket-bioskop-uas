@@ -26,6 +26,14 @@ Buka [http://localhost:3000](http://localhost:3000). Database demo disimpan di `
 
 Pembayaran merupakan simulasi, bukan pemrosesan uang sungguhan. Pemesanan maksimal enam kursi. Constraint unik database pada jadwal dan nomor kursi mencegah kursi ganda sekalipun dua transaksi berjalan bersamaan.
 
+## Halaman tambahan
+
+- `/promotions` — kartu promo dan salin kode demo.
+- `/coming-soon` — daftar film mendatang dengan filter genre, pencarian, dan pengingat lokal.
+- `/login` — login dan pendaftaran demo yang disimpan di `localStorage` browser.
+
+Login lokal hanya untuk demonstrasi. Data akun tidak disinkronkan ke server dan bukan pengganti autentikasi produksi.
+
 ## API
 
 - `GET /api/showtimes/default` atau `GET /api/showtimes/:id` — detail jadwal serta kursi yang terisi.

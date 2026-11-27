@@ -1,4 +1,5 @@
 import type { Showtime } from "@/lib/booking-types";
+import Link from "next/link";
 
 const steps = ["Pilih Kursi", "Ringkasan", "Pembayaran"];
 type HeaderShowtime = Pick<Showtime, "movieTitle" | "rating" | "cinema" | "studio" | "showDate" | "showTime">;
@@ -11,6 +12,11 @@ export function BookingHeader({ currentStep, showtime }: { currentStep: number; 
           <div className="brand">CINEMA XXI<small>THE PREMIERE EXPERIENCE</small></div>
           <span className="mtix-badge">m.tix</span>
         </div>
+        <nav className="booking-feature-links" aria-label="Fitur lainnya">
+          <Link href="/promotions">Promotions</Link>
+          <Link href="/coming-soon">Coming Soon</Link>
+          <Link href="/login">Login lokal</Link>
+        </nav>
         <div className="film-heading">
           <div>
             <h1>{showtime?.movieTitle ?? "Pemesanan Tiket"}</h1>
