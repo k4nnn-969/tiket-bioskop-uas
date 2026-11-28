@@ -1,19 +1,28 @@
 import type { Metadata } from "next";
-import { Cinzel, Plus_Jakarta_Sans } from "next/font/google";
+import { DM_Sans, Manrope } from "next/font/google";
 import "./globals.css";
 
-const cinzel = Cinzel({ subsets: ["latin"], variable: "--font-cinzel" });
-const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-jakarta" });
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-dm-sans",
+});
+
+const manrope = Manrope({
+  subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
+  variable: "--font-manrope",
+});
 
 export const metadata: Metadata = {
-  title: "CINEMA XXI | Pemesanan Tiket",
-  description: "Pilih kursi dan pesan tiket bioskop.",
+  title: "TIX ID | Cari Film, Pesan Tiket",
+  description: "Cari film. Pesan tiket. Nikmati ceritanya.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="id">
-      <body className={`${cinzel.variable} ${jakarta.variable}`}>{children}</body>
+      <body className={`${dmSans.variable} ${manrope.variable}`}>{children}</body>
     </html>
   );
 }
