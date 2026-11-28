@@ -7,6 +7,40 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Cinema {
+  id             String     @id @default(cuid())
+  slug           String     @unique
+  name           String
+  brand          String     @default("XXI") 
+  city           String
+  address        String
+  phone          String
+  operatingHours String     @default("10:00 - 23:45 WIB")
+  facilities     String   
+  studioTypes    String
+  totalStudios   Int        @default(6)
+  ticketBaseInfo String
+  mapUrl         String?
+  showtimes      Showtime[]
+  createdAt      DateTime   @default(now())
+
+  @@index([city])
+}
+
+model Movie {
+  id          String     @id @default(cuid())
+  slug        String     @unique
+  title       String
+  genre       String
+  durationMin Int
+  rating      String
+  synopsis    String
+  posterUrl   String
+  status      String     @default("NOW_SHOWING")  
+  releaseDate String
+  showtimes   Showtime[]
+}
+
 model Showtime {
   id          String       @id @default(cuid())
   movieTitle  String
@@ -17,8 +51,18 @@ model Showtime {
   showTime    String
   ticketPrice Int
   adminFee    Int          @default(4000)
+  studioType  String       @default("REGULAR")
+  totalSeats  Int          @default(96)
+  cinemaId    String?
+  movieId     String?
+  cinemaRel   Cinema?      @relation(fields: [cinemaId], references: [id], onDelete: Cascade)
+  movieRel    Movie?       @relation(fields: [movieId], references: [id], onDelete: Cascade)
+
   bookings    Booking[]
   bookedSeats BookedSeat[]
+
+  @@index([cinemaId, showDate])
+  @@index([movieId, showDate])
 }
 
 model Booking {

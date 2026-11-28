@@ -19,17 +19,29 @@ export default function BookingPage() {
   const [error, setError] = useState("");
 
   const refreshShowtime = useCallback(async () => {
-    const response = await fetch("/api/showtimes/default", { cache: "no-store" });
+    const queryId =
+      (typeof window !== "undefined"
+        ? new URLSearchParams(window.location.search).get("showtimeId")
+        : null) ||
+      showtime?.id ||
+      "default";
+
+    const response = await fetch(`/api/showtimes/${encodeURIComponent(queryId)}`, {
+      cache: "no-store",
+    });
     const result = (await response.json()) as ShowtimeResponse | { error: string };
     if (!response.ok || "error" in result) {
       throw new Error("error" in result ? result.error : "Jadwal tidak dapat dimuat.");
     }
     setShowtime(result);
-  }, []);
+  }, [showtime?.id]);
 
   useEffect(() => {
     let active = true;
-    fetch("/api/showtimes/default", { cache: "no-store" })
+    const showtimeId =
+      new URLSearchParams(window.location.search).get("showtimeId") || "default";
+
+    fetch(`/api/showtimes/${encodeURIComponent(showtimeId)}`, { cache: "no-store" })
       .then(async (response) => {
         const result = (await response.json()) as ShowtimeResponse | { error: string };
         if (!response.ok || "error" in result) {
@@ -113,7 +125,8 @@ export default function BookingPage() {
     setTicket(null);
     setStep(1);
     setError("");
-    window.history.replaceState(null, "", "/booking");
+    const currentShowtimeParam = showtime?.id ? `?showtimeId=${encodeURIComponent(showtime.id)}` : "";
+    window.history.replaceState(null, "", `/booking${currentShowtimeParam}`);
   }
 
   const activeShowtime = ticket?.showtime ?? showtime;

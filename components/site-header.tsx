@@ -60,10 +60,13 @@ export function SiteHeader() {
             className={`${styles.links} ${menuOpen ? styles.linksOpen : ""}`}
             id="site-navigation"
           >
+            <Link href="/" onClick={() => setMenuOpen(false)}>Beranda</Link>
             <Link href="/booking" onClick={() => setMenuOpen(false)}>Movies</Link>
             <Link href="/booking" onClick={() => setMenuOpen(false)}>Bioskop &amp; Jadwal</Link>
             <Link href="/promotions" onClick={() => setMenuOpen(false)}>Promotions</Link>
             <Link href="/coming-soon" onClick={() => setMenuOpen(false)}>Coming Soon</Link>
+            <Link href="/cinemas" onClick={() => setMenuOpen(false)}>Bioskop</Link>
+            <Link href="/showtimes" onClick={() => setMenuOpen(false)}>Jadwal Tayang</Link>
           </nav>
           <div className={styles.actions}>
             <span className={styles.location}>
